@@ -72,6 +72,15 @@ class _CadastroState extends State<Cadastro> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      validator: (value) {
+                        if (value!.isNotEmpty) {
+                          return null;
+                        } else if (value.length < 3 || value.isEmpty) {
+                          return 'Verifiue se digitou corretamente';
+                        } else {
+                          return 'Campo Obrigatório';
+                        }
+                      },
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -82,6 +91,28 @@ class _CadastroState extends State<Cadastro> {
                       controller: controllerEmail,
                       decoration: InputDecoration(
                         labelText: 'E-mail',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value!.contains('@') && value.length > 5) {
+                          return 'Verifique se digitou corretamente';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: TextFormField(
+                      controller: controllerBirth,
+                      decoration: InputDecoration(
+                        labelText: 'Nascimento',
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(20),
@@ -103,21 +134,6 @@ class _CadastroState extends State<Cadastro> {
                     width: double.infinity,
                     height: 50,
                     child: TextFormField(
-                      controller: controllerBirth,
-                      decoration: InputDecoration(
-                        labelText: 'Nascimento',
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: TextFormField(
                       controller: controllerPhone,
                       decoration: InputDecoration(
                         labelText: 'Telefone',
@@ -126,6 +142,15 @@ class _CadastroState extends State<Cadastro> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      validator: (value) {
+                        if (value!.isNotEmpty) {
+                          return null;
+                        } else if (value.length < 3 || value.isEmpty) {
+                          return 'Verifiue se digitou corretamente';
+                        } else {
+                          return 'Campo Obrigatório';
+                        }
+                      },
                     ),
                   )
                 ],
