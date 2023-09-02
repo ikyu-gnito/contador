@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:contador/view/widgets/alerta.dart';
+import 'package:contador/view/widgets/mixing_validator.dart';
 import 'package:flutter/material.dart';
 
 class Cadastro extends StatefulWidget {
@@ -10,7 +11,8 @@ class Cadastro extends StatefulWidget {
   State<Cadastro> createState() => _CadastroState();
 }
 
-class _CadastroState extends State<Cadastro> {
+class _CadastroState extends State<Cadastro> with ValidationMixin
+{
   @override
   Widget build(BuildContext context) {
     final controllerName = TextEditingController();
@@ -58,6 +60,9 @@ class _CadastroState extends State<Cadastro> {
             ),
             const Spacer(),
             Form(
+              autovalidateMode:
+                  AutovalidateMode.always, //sempre validado e ativado
+              key: _formKey, //forma global de validação
               child: Column(
                 children: [
                   SizedBox(
@@ -88,6 +93,7 @@ class _CadastroState extends State<Cadastro> {
                     width: double.infinity,
                     height: 50,
                     child: TextFormField(
+                      validator: isNotEmpyt,
                       controller: controllerEmail,
                       decoration: InputDecoration(
                         labelText: 'E-mail',
@@ -96,13 +102,6 @@ class _CadastroState extends State<Cadastro> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      validator: (value) {
-                        if (value!.contains('@') && value.length > 5) {
-                          return 'Verifique se digitou corretamente';
-                        } else {
-                          return null;
-                        }
-                      },
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -110,6 +109,7 @@ class _CadastroState extends State<Cadastro> {
                     width: double.infinity,
                     height: 50,
                     child: TextFormField(
+                      validator: isNotEmpyt,
                       controller: controllerBirth,
                       decoration: InputDecoration(
                         labelText: 'Nascimento',
@@ -118,15 +118,6 @@ class _CadastroState extends State<Cadastro> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      validator: (value) {
-                        if (value!.isNotEmpty) {
-                          return null;
-                        } else if (value.length < 3 || value.isEmpty) {
-                          return 'Verifiue se digitou corretamente';
-                        } else {
-                          return 'Campo Obrigatório';
-                        }
-                      },
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -134,6 +125,12 @@ class _CadastroState extends State<Cadastro> {
                     width: double.infinity,
                     height: 50,
                     child: TextFormField(
+                      validator: (value) => combine(
+                        [
+                          () => isNotEmpyt(value),
+                          () => hasOnzeCaracteres(value),
+                        ],
+                      ),
                       controller: controllerPhone,
                       decoration: InputDecoration(
                         labelText: 'Telefone',
@@ -142,15 +139,6 @@ class _CadastroState extends State<Cadastro> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      validator: (value) {
-                        if (value!.isNotEmpty) {
-                          return null;
-                        } else if (value.length < 3 || value.isEmpty) {
-                          return 'Verifiue se digitou corretamente';
-                        } else {
-                          return 'Campo Obrigatório';
-                        }
-                      },
                     ),
                   )
                 ],
@@ -163,7 +151,8 @@ class _CadastroState extends State<Cadastro> {
               /*valor maximo para colocar na tela por ele ser um valor double*/
               child: FilledButton(
                 onPressed: () {
-                  showDialog<void>(
+                  if(_formKey.currentState!.validate()){
+                    showDialog<void>(
                     context: context,
                     builder: (BuildContext context) {
                       return Alerta(
@@ -171,10 +160,15 @@ class _CadastroState extends State<Cadastro> {
                         controllerEmail: controllerEmail,
                         controllerBirth: controllerBirth,
                         controllerPhone: controllerPhone,
-                      );
-                    },
+                        );
+                      },
                   );
+                  return null;
+                  }
                 },
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
                 child: const Text('Enviar'),
               ),
             ),
